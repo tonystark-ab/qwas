@@ -5,12 +5,26 @@ before_install:
  # - docker pull surendrajat/twrp-builder:latest
 before_script:
  # - cd $HOME && mkdir twrp
- # - wget -q https://github.com/TwrpBuilder/twrp-sources/releases/download/omni_twrp-5.1.1-cleaned/omni_twrp-5.1.1_cleaned.tar.xz -O $HOME/twrp.tar.xz
- # - tar -xJf twrp.tar.xz --directory $HOME/twrp/ && rm twrp.tar.xz
+ - mkdir -p /opt/android/sdk && mkdir .android
+ - cd /opt/android/sdk && curl -o sdk.zip https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip && unzip sdk.zip && rm sdk.zip
+ - yes | /opt/android/sdk/tools/bin/sdkmanager --licenses
+ - /opt/android/sdk/tools/bin/sdkmanager --update > /dev/null
+ - /opt/android/sdk/tools/bin/sdkmanager platform-tools > /dev/null
+ - /opt/android/sdk/tools/bin/sdkmanager tools > /dev/null
+ - /opt/android/sdk/tools/bin/sdkmanager emulator > /dev/null
+ - /opt/android/sdk/tools/bin/sdkmanager "extras;android;m2repository" > /dev/null
+ - /opt/android/sdk/tools/bin/sdkmanager "extras;google;m2repository" > /dev/null
+ - /opt/android/sdk/tools/bin/sdkmanager "extras;google;google_play_services" > /dev/null
+ - /opt/android/sdk/tools/bin/sdkmanager "build-tools;28.0.3" > /dev/null
+ - /opt/android/sdk/tools/bin/sdkmanager "platforms;android-28" > /dev/null
+  # - wget -q https://github.com/TwrpBuilder/twrp-sources/releases/download/omni_twrp-5.1.1-cleaned/omni_twrp-5.1.1_cleaned.tar.xz -O $HOME/twrp.tar.xz
+  # - tar -xJf twrp.tar.xz --directory $HOME/twrp/ && rm twrp.tar.xz
 script:
  - cd $HOME/
  - git clone https://github.com/M1Dr05/IsTheApp
  - cd IsTheApp
- - sudo apt-get install gradle
+ - export ANDROID_HOME="/opt/android/sdk/"
+ - export BUILD_TOOLS_VER="28.0.3"
+ - export PATH=$PATH:/opt/android/sdk/build-tools/$BUILD_TOOLS_VER
  - gradle build
  
